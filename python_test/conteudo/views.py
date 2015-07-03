@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from django.db.models import Count, Q
 from django.views import generic
 
 from .models import Ator, Genero, Filme
@@ -13,6 +14,33 @@ class AtorDetailView(generic.DetailView):
 
 class FilmeDetailView(generic.DetailView):
     model = Filme
+
+    def get_queryset(self):
+        return (
+            super(FilmeDetailView, self).get_queryset()
+            .prefetch_related('generos')
+            .prefetch_related('atores')
+        )
+
+    def get_filmes_relacionados(self):
+        return (
+            self.model.objects
+            .exclude(pk=self.object.pk)
+            .filter(
+                Q(atores__in=self.object.atores.all()) |
+                Q(generos__in=self.object.generos.all())
+            )
+            .annotate(peso=Count('pk'))
+            .order_by('-peso')
+        )[:10]
+
+    def get_context_data(self, **kwargs):
+        context = super(FilmeDetailView, self).get_context_data(**kwargs)
+        context.update({
+            'filmes_relacionados': self.get_filmes_relacionados()
+        })
+
+        return context
 
 
 class FilmeListView(generic.ListView):
