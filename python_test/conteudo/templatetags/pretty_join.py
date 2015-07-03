@@ -21,6 +21,9 @@ def _as_link(obj):
 def pretty_join(value, conjuncao='e'):
     value = list(value)  # force evaluation
 
+    if len(value) == 0:
+        return ''
+
     if len(value) == 1:
         return mark_safe(_as_link(value[0]))
 
