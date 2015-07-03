@@ -1,5 +1,6 @@
 {% extends 'conteudo/base.html' %}
 
+{% load cache %}
 {% load imagekit %}
 
 {% block title %}
@@ -30,9 +31,11 @@
     <h2>Filmes Relacionados</h2>
   </header>
   <ul>
-    {% with object_list=object.filme_set.all|slice:':20' %}
-      {% include 'conteudo/_lista.html' %}
-    {% endwith %}
+    {% cache 3600 filmes_relacionados_ator object.pk %}
+      {% with object_list=object.filme_set.all|slice:':20' %}
+        {% include 'conteudo/_lista.html' %}
+      {% endwith %}
+    {% endcache %}
   </ul>
 </section>
 {% endblock %}

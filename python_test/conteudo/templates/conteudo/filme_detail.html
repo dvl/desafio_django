@@ -1,5 +1,6 @@
 {% extends 'conteudo/base.html' %}
 
+{% load cache %}
 {% load imagekit %}
 {% load pretty_join %}
 
@@ -33,6 +34,10 @@
   <header class="fix">
     <h2>Filmes Relacionados</h2>
   </header>
-  {% include 'conteudo/_lista.html' %}
+  {% cache 3600 filmes_relacionados_filme object.pk %}
+    {% with object_list=filmes_relacionados %}
+      {% include 'conteudo/_lista.html' %}
+    {% endwith %}
+  {% endcache %}
 </section>
 {% endblock %}
