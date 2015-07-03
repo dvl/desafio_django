@@ -1,0 +1,38 @@
+{% extends 'conteudo/base.html' %}
+
+{% load imagekit %}
+
+{% block title %}
+  {{ object.nome }}
+{% endblock %}
+
+{% block main %}
+<header class="fix">
+  <h1>Atores</h1>
+</header>
+
+<section id="Infos" class='fix'>
+  <figure class="fl">
+    {% thumbnail '160x100' object.foto -- alt=object.nome title=object.nome %}
+  </figure>
+
+  <article class="fl">
+    <p class="tit">Ator</p>
+    <h2>{{ object.nome }}</h2>
+    <p class="txt"><strong>País:</strong> {{ object.pais }}</p>
+
+  </article>
+
+</section>
+
+<section id="listagem" class='fix'>
+  <header class="fix">
+    <h2>Filmes Relacionados</h2>
+  </header>
+  <ul>
+    {% with object_list=object.filme_set.all|slice:':20' %}
+      {% include 'conteudo/_lista.html' %}
+    {% endwith %}
+  </ul>
+</section>
+{% endblock %}

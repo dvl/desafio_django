@@ -1,0 +1,38 @@
+{% extends 'conteudo/base.html' %}
+
+{% load imagekit %}
+{% load pretty_join %}
+
+{% block title %}
+  {{ object.nome }}
+{% endblock %}
+
+{% block main %}
+<header class="fix">
+  <h1>{{ object.nome }}</h1>
+</header>
+
+<section id="Infos" class='fix'>
+  <figure class="fl">
+    {% thumbnail '220x283' object.cartaz -- alt=object.nome title=object.nome %}
+  </figure>
+
+  <article class="fl">
+    <p class="tit">Sinopse:</p>
+    <p class="txt">{{ object.sinopse }}</p>
+    <p class="tit">Genero:</p>
+    <p class="txt">{{ object.generos.all|pretty_join }}.</p>
+
+    <p class="tit">Atores:</p>
+    <p class="txt">{{ object.atores.all|pretty_join }}.</p>
+  </article>
+
+</section>
+
+<section id="listagem" class='fix'>
+  <header class="fix">
+    <h2>Filmes Relacionados</h2>
+  </header>
+  {% include 'conteudo/_lista.html' %}
+</section>
+{% endblock %}

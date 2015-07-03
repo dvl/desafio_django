@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'css/comum.css' %}">
+</head>
+<body>
+  <header id="header">
+    <div class="content">
+      <a href="{% url 'conteudo:index' %}" class="home" title="voltar para home"></a>
+    </div>
+  </header>
+  <main id="Content" class="fix">
+    {% block main %}{% endblock %}
+  </main>
+</body>
+</html>

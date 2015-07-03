@@ -1,0 +1,32 @@
+{% extends 'conteudo/base.html' %}
+
+{% block title %}
+  {% if genero %}
+    {{ genero.nome }}
+  {% else %}
+    Listagem de Filmes
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+<header class="fix">
+  <h1 class="fl">
+    {% if genero %}
+      {{ genero.nome }}
+    {% else %}
+      Listagem de Filmes
+    {% endif %}
+  </h1>
+  <form action="">
+    <select name="ordem" onchange="javascript:this.form.submit()" class="fr">
+      <option value="">Ordenar por:</option>
+      <option value="asc">a - z</option>
+      <option value="desc">z - a</option>
+    </select>
+  </form>
+</header>
+
+<section id="listagem" class='fix'>
+  {% include 'conteudo/_lista.html' %}
+</section>
+{% endblock %}

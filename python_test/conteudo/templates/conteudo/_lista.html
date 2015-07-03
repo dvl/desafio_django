@@ -1,0 +1,11 @@
+{% load imagekit %}
+
+<ul>
+  {% for filme in object_list %}
+    <li class="fl {% if forloop.counter|divisibleby:5 %}last{% endif %} ">
+      <a href="{{ filme.get_absolute_url }}">
+        {% thumbnail '168x216' filme.cartaz -- alt=filme.nome title=filme.nome %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
