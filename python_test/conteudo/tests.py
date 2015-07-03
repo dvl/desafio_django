@@ -34,13 +34,17 @@ class TestTemplateFilter(TestCase):
 
         self.assertHTMLEqual(rendered, output)
 
+    def test_lista_vazia(self):
+        rendered = self.TEMPLATE.render(Context({'object_list': []}))
+
+        self.assertHTMLEqual(rendered, '')
+
     def test_objeto_sem_url(self):
         delattr(Genero, 'get_absolute_url')
         gen = mommy.make(Genero)
         rendered = self.TEMPLATE.render(Context({'object_list': [gen]}))
 
         self.assertHTMLEqual(rendered, '{}'.format(gen.nome))
-
 
 
 class TestFilmeListView(TestCase):
@@ -53,7 +57,8 @@ class TestFilmeListView(TestCase):
     def test_cabecalho_e_montado_corretamente(self):
         response = self.client.get('/')
 
-        self.assertInHTML('<h1 class="fl">Listagem de Filmes</h1>', response.rendered_content)
+        self.assertInHTML('<h1 class="fl">Listagem de Filmes</h1>',
+                          response.rendered_content)
 
     def test_ordenacao_e_respeitada(self):
         a = mommy.make(Filme, nome='AAA')
@@ -79,3 +84,34 @@ class TestFilmeListView(TestCase):
 
         response = self.client.get('/genero/gen2/')
         self.assertEqual(len(response.context['object_list']), 2)
+
+
+class TestAtorDetailView(TestCase):
+    def test_deve_listar_no_maximo_20_filmes_relacionados(self):
+        ator = mommy.make(Ator, nome='foo')
+        mommy.make(Filme, atores=[ator], _quantity=30)
+
+        response = self.client.get('/ator/foo/')
+        self.assertEqual(len(response.context['object_list']), 20)
+
+
+class TestFilmeDetailView(TestCase):
+    def test_deve_listar_no_maximo_10_filmes_relacionados(self):
+        ator = mommy.make(Ator)
+        filmes = mommy.make(Filme, atores=[ator], _quantity=12)
+
+        response = self.client.get('/filme/{}/'.format(filmes[0].slug))
+        self.assertEqual(len(response.context['filmes_relacionados']), 10)
+
+    def test_deve_ordenar_de_acordo_com_relacionamento(self):
+        ''' objetos que tem mais em comum com o objeto solicitado
+        devem aparecer na frente '''
+        atores = mommy.make(Ator, _quantity=3)
+        generos = mommy.make(Genero, _quantity=3)
+
+        filme1 = mommy.make(Filme, atores=atores, generos=generos)
+        filme2 = mommy.make(Filme, atores=atores[:2], generos=generos[:2])
+        filme3 = mommy.make(Filme, atores=atores[:1], generos=generos[:1])
+
+        response = self.client.get('/filme/{}/'.format(filme3.slug))
+        self.assertListEqual(list(response.context['filmes_relacionados']), [filme1, filme2])
