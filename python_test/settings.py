@@ -76,3 +76,9 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root/')
 MEDIA_URL = '/media/'
+
+# Tests
+
+MOMMY_CUSTOM_FIELDS_GEN = {
+    'autoslug.fields.AutoSlugField': lambda: None,
+}

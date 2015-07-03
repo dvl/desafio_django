@@ -1,5 +1,7 @@
 *.pyc
 *.sqlite3
 
+.coverage
+htmlcov/
 static-root/
 media-root/
