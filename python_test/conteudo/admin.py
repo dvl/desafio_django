@@ -14,10 +14,6 @@ class AtorAdmin(admin.ModelAdmin):
 class FilmeAdmin(admin.ModelAdmin):
     raw_id_fields = ('atores', 'generos')
 
-    autocomplete_lookup_fields = {
-        'm2m': ('atores', 'generos'),
-    }
-
 
 @admin.register(Genero)
 class GeneroAdmin(admin.ModelAdmin):

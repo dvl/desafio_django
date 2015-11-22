@@ -18,10 +18,6 @@ class Ator(models.Model):
     def __unicode__(self):
         return '{}'.format(self.nome)
 
-    @staticmethod
-    def autocomplete_search_fields():
-        return ('id__iexact', 'nome__icontains')
-
     def get_absolute_url(self):
         return reverse('conteudo:ator', args=(self.slug,))
 
@@ -44,10 +40,6 @@ class Filme(models.Model):
     def __unicode__(self):
         return '{}'.format(self.nome)
 
-    @staticmethod
-    def autocomplete_search_fields():
-        return ('id__iexact', 'nome__icontains')
-
     def get_absolute_url(self):
         return reverse('conteudo:filme', args=(self.slug,))
 
@@ -63,10 +55,6 @@ class Genero(models.Model):
 
     def __unicode__(self):
         return '{}'.format(self.nome)
-
-    @staticmethod
-    def autocomplete_search_fields():
-        return ('id__iexact', 'nome__icontains')
 
     def get_absolute_url(self):
         return reverse('conteudo:genero', args=(self.slug,))
