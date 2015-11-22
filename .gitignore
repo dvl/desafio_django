@@ -1,7 +1,10 @@
 *.pyc
 *.sqlite3
 
+.env
+
 .coverage
 htmlcov/
 static-root/
 media-root/
+data/

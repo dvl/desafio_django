@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from pathlib import Path
+from decouple import config, Csv
+from dj_database_url import parse as db_url
 
-SECRET_KEY = '1k66*#y4#4n@%#poe(2$s$_ec-j^uopb7-7)5ymsqgbs-^epzx'
+BASE_DIR = Path(__file__).absolute().parent.parent
 
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY')
 
-TEMPLATE_DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
+    'flat',
     # django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,9 +29,9 @@ INSTALLED_APPS = (
     'imagekit',
     # projeto
     'python_test.conteudo',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -37,24 +39,37 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 ROOT_URLCONF = 'python_test.urls'
 
 WSGI_APPLICATION = 'python_test.wsgi.application'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            BASE_DIR / 'templates'
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': config('DATABASE_URL', cast=db_url)
 }
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
 
@@ -68,12 +83,16 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static-root/')
+STATICFILES_DIRS = [
+    str(BASE_DIR / 'static'),
+    str(BASE_DIR.parent / 'bower_components')
+]
+
+STATIC_ROOT = str(BASE_DIR / 'static-root/')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root/')
+MEDIA_ROOT = str(BASE_DIR / 'media-root/')
 MEDIA_URL = '/media/'
 
 # Tests
