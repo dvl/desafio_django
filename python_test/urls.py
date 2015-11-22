@@ -8,7 +8,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('python_test.conteudo.urls', namespace='conteudo')),
-    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]
 
